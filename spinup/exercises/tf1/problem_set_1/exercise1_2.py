@@ -33,12 +33,14 @@ def mlp(x, hidden_sizes=(32,), activation=tf.tanh, output_activation=None):
         A TF symbol for the output of an MLP that takes x as an input.
 
     """
-    #######################
-    #                     #
-    #   YOUR CODE HERE    #
-    #                     #
-    #######################
-    pass
+    num_layers = len(hidden_sizes)
+    model = tf.keras.Sequential()
+
+    for i in range(num_layers - 1):
+        model.add(tf.keras.layers.Dense(units=hidden_sizes[i], activation=activation))
+
+    model.add(tf.keras.layers.Dense(units=hidden_sizes[num_layers - 1], activation=output_activation))
+    return model(x)
 
 def mlp_gaussian_policy(x, a, hidden_sizes, activation, output_activation, action_space):
     """
@@ -72,14 +74,10 @@ def mlp_gaussian_policy(x, a, hidden_sizes, activation, output_activation, actio
             Gaussian distribution.
 
     """
-    #######################
-    #                     #
-    #   YOUR CODE HERE    #
-    #                     #
-    #######################
-    # mu = 
-    # log_std = 
-    # pi = 
+    num_actions = tf.shape(a)[1]
+    mu = mlp(x, list(hidden_sizes).append(num_actions), activation, output_activation)
+    log_std = tf.Variable(tf.shape(a), initial_value=-0.5)
+    pi = mu + tf.math.exp(log_std) * tf.random.normal(tf.shape(a))
 
     logp = exercise1_1.gaussian_likelihood(a, mu, log_std)
     logp_pi = exercise1_1.gaussian_likelihood(pi, mu, log_std)

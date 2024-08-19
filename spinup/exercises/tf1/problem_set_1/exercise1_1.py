@@ -23,12 +23,7 @@ def gaussian_likelihood(x, mu, log_std):
     Returns:
         Tensor with shape [batch]
     """
-    #######################
-    #                     #
-    #   YOUR CODE HERE    #
-    #                     #
-    #######################
-    return tf.constant(0)
+    return -0.5 * tf.math.reduce_sum(((x - mu) / tf.math.exp(log_std))**2 + 2*log_std + tf.math.log(2*np.pi), axis=1)
 
 
 if __name__ == '__main__':
